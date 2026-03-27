@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.*;
 
 import com.revature.project2.models.User;
 import com.revature.project2.models.DTOs.IncomingLogin;
-
+import jakarta.validation.Valid;
 
 import java.util.List;
 
@@ -26,7 +26,7 @@ public class UserController {
     private final UserServices userServices;
 
     @PostMapping
-    public ResponseEntity<OutgoingUserWithTokenDTO> login(@RequestBody IncomingLogin user) {
+    public ResponseEntity<OutgoingUserWithTokenDTO> login(@Valid @RequestBody IncomingLogin user) {
         TokenDto token = authService.login(user.username(), user.password());
         // This is a little jank but whatever
         User userInfo = userServices.getUserByUsername(user.username());
@@ -43,7 +43,7 @@ public class UserController {
     }
 
     @PostMapping("/register")
-    public ResponseEntity<TokenDto> register(@RequestBody User user) {
+    public ResponseEntity<TokenDto> register(@Valid @RequestBody User user) {
         userManagementService.createUser(user);
         return ResponseEntity.ok(authService.login(user.getUsername(),user.getPassword()));
     }
@@ -71,8 +71,8 @@ public class UserController {
         return  ResponseEntity.ok(new OutgoingUserDTO(user.getUserId(), user.getUsername(), user.getEmail(), user.getFirstName(), user.getLastName(), user.getRole() ));
     }
 
-    @DeleteMapping
-    public ResponseEntity<Void> delete(@RequestBody String username){
+    @DeleteMapping("/{username}")
+    public ResponseEntity<Void> delete(@PathVariable String username){
         userManagementService.deleteUser(username);
         return ResponseEntity.ok().build();
     }

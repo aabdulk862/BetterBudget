@@ -1,5 +1,13 @@
 import React, { useEffect, useState } from "react";
-import { Box, Typography, TextField, Button, Divider, Snackbar, Alert } from "@mui/material";
+import {
+  Box,
+  Typography,
+  TextField,
+  Button,
+  Divider,
+  Snackbar,
+  Alert,
+} from "@mui/material";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 import "./Login.scss";
@@ -12,7 +20,7 @@ export const Login: React.FC = () => {
   const [password, setPassword] = useState("");
   const navigate = useNavigate();
 
-	const setUser = useStore((state) => state.setUser);
+  const setUser = useStore((state) => state.setUser);
   const user = useStore((state) => state.user);
   const setSnackbar = useStore((state) => state.setSnackbar);
   const [errorAlert, setErrorAlert] = useState(false);
@@ -21,46 +29,47 @@ export const Login: React.FC = () => {
     e.preventDefault();
 
     try {
-      await axios.post(
-        `${backendHost}/users`, 
-        { username, password }, 
-        { withCredentials: true } // Important for cookies/JWT
-      ).then((res) => {
-        console.log("Login successful:", res.data);
-        // Set user information in the store
-        // Change this to actual information later
-        setUser({
-          loggedIn: true,
-    
-          userId: res.data.userId,
-          username: res.data.username,
-          role: res.data.role,
-          firstName: res.data.firstName,
-          lastName: res.data.lastName,
-          token: res.data.token
+      await axios
+        .post(
+          `${backendHost}/users`,
+          { username, password },
+          { withCredentials: true }, // Important for cookies/JWT
+        )
+        .then((res) => {
+          console.log("Login successful:", res.data);
+          // Set user information in the store
+          // Change this to actual information later
+          setUser({
+            loggedIn: true,
+
+            userId: res.data.userId,
+            username: res.data.username,
+            role: res.data.role,
+            firstName: res.data.firstName,
+            lastName: res.data.lastName,
+            token: res.data.token,
+          });
+
+          // Show the Snackbar
+          setSnackbar(true, "Login successful!");
+
+          // Set token in localstorage for later logins
+          localStorage.setItem("gooderBudgetToken", res.data.token);
+
+          // alert("Login successful!");
+          navigate("/envelopes"); // Navigate to envelopes
         });
-
-        // Show the Snackbar
-        setSnackbar(true, "Login successful!");
-        
-        // Set token in localstorage for later logins
-				localStorage.setItem("gooderBudgetToken", res.data.token);
-
-        // alert("Login successful!");
-        navigate("/envelopes"); // Navigate to envelopes
-      });
-
     } catch (err) {
       setErrorAlert(true);
       console.error("Login failed:", err);
     }
   };
 
-  useEffect(()=>{
-    if(user.loggedIn){
+  useEffect(() => {
+    if (user.loggedIn) {
       navigate("/envelopes");
     }
-  },[user]);
+  }, [user]);
 
   return (
     <Box className="login-container">
@@ -113,7 +122,7 @@ export const Login: React.FC = () => {
             onChange={(e) => setPassword(e.target.value)}
           />
           <Button
-            className="button1"
+            className="btn-primary"
             type="submit"
             fullWidth
             variant="contained"
@@ -135,14 +144,18 @@ export const Login: React.FC = () => {
 
       {/* Error Snackbar */}
       <Snackbar
-              open={errorAlert}
-              autoHideDuration={3000}
-              onClose={()=>setErrorAlert(false)}
-              anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
-            >
-              <Alert onClose={()=>setErrorAlert(false)} severity="error" sx={{ width: '100%' }}>
-                User not found. Check credentials.
-              </Alert>
+        open={errorAlert}
+        autoHideDuration={3000}
+        onClose={() => setErrorAlert(false)}
+        anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
+      >
+        <Alert
+          onClose={() => setErrorAlert(false)}
+          severity="error"
+          sx={{ width: "100%" }}
+        >
+          User not found. Check credentials.
+        </Alert>
       </Snackbar>
     </Box>
   );

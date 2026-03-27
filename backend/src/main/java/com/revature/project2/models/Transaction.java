@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import org.springframework.stereotype.Component;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -18,23 +19,23 @@ public class Transaction {
     private String title;
     @Column(nullable = false)
     private String transactionDescription;
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "envelopeId")
     private Envelope envelope;
     @Column(nullable = false)
     private LocalDateTime datetime;
     @Column(nullable = false)
     private String category;
-    @Column(nullable = false)
-    private double transactionAmount;
-    @OneToMany(mappedBy = "transaction", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @Column(nullable = false, precision = 19, scale = 2)
+    private BigDecimal transactionAmount;
+    @OneToMany(mappedBy = "transaction", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JsonIgnore
     private List<EnvelopeHistory> envelopeHistories;
 
     public Transaction() {
     }
 
-    public Transaction(int transactionId, String title, String transactionDescription, Envelope envelope, LocalDateTime datetime, String category, double transactionAmount) {
+    public Transaction(int transactionId, String title, String transactionDescription, Envelope envelope, LocalDateTime datetime, String category, BigDecimal transactionAmount) {
         this.transactionId = transactionId;
         this.title = title;
         this.transactionDescription = transactionDescription;
@@ -92,11 +93,11 @@ public class Transaction {
         this.category = category;
     }
 
-    public double getTransactionAmount() {
+    public BigDecimal getTransactionAmount() {
         return transactionAmount;
     }
 
-    public void setTransactionAmount(double transactionAmount) {
+    public void setTransactionAmount(BigDecimal transactionAmount) {
         this.transactionAmount = transactionAmount;
     }
 

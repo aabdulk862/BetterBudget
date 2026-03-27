@@ -1,5 +1,6 @@
 import axios from "axios";
 
-const backendHost: string = "http://44.204.237.144:8080";
+const backendHost: string =
+  import.meta.env.VITE_API_BASE_URL || "http://localhost:8080/api/v1";
 axios.defaults.baseURL = backendHost;
 export default backendHost;

@@ -10,10 +10,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 import org.mockito.ArgumentCaptor;
-import org.mockito.Mock;
 import org.mockito.Mockito;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 
 import java.util.ArrayList;
@@ -51,7 +48,7 @@ public class UserServiceTests {
 
         when(userRepository.findByUsername("NewUser")).thenReturn(Optional.of(newUser));
 
-        IllegalArgumentException ex = Assertions.assertThrows(IllegalArgumentException.class, ()->userServices.register(newUser));
+        Assertions.assertThrows(IllegalArgumentException.class, ()->userServices.register(newUser));
     }
     @ParameterizedTest
     @CsvSource({"Username,,User,User",",password,User,User","Username,password,,User","Username,password,User,"})
@@ -60,7 +57,7 @@ public class UserServiceTests {
 
         when(userRepository.findByUsername("NewUser")).thenReturn(Optional.of(newUser));
 
-        IllegalArgumentException ex = Assertions.assertThrows(IllegalArgumentException.class, ()->userServices.register(newUser));
+        Assertions.assertThrows(IllegalArgumentException.class, ()->userServices.register(newUser));
     }
 
     @Test
@@ -96,8 +93,7 @@ public class UserServiceTests {
         when(userRepository.findByUsername("NotUser")).thenReturn(Optional.empty());
         User responseUser = userServices.getUserByUsername("User");
         Assertions.assertTrue(responseUser.getUsername().equals("User"));
-        UsernameNotFoundException ex = Assertions.assertThrows(UsernameNotFoundException.class, ()->userServices.getUserByUsername("NotUser"));
-    }
+        Assertions.assertThrows(UsernameNotFoundException.class, ()->userServices.getUserByUsername("NotUser"));    }
 
 
     @Test
@@ -111,7 +107,7 @@ public class UserServiceTests {
         userServices.deleteByUsername("User");
         Assertions.assertTrue("User".equals(userCapture.getValue().getUsername()));
         Mockito.verify(userRepository).delete(Mockito.any(User.class));
-        UsernameNotFoundException ex = Assertions.assertThrows(UsernameNotFoundException.class, ()->userServices.deleteByUsername("NotUser"));
+        Assertions.assertThrows(UsernameNotFoundException.class, ()->userServices.deleteByUsername("NotUser"));
     }
 
 

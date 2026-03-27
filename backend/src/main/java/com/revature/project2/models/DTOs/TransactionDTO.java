@@ -1,6 +1,7 @@
 package com.revature.project2.models.DTOs;
 
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -26,7 +27,7 @@ public class TransactionDTO {
     private String category;
 
     // Amount of money involved in the transaction.
-    private double transactionAmount;
+    private BigDecimal transactionAmount;
 
     // List of envelope histories associated with this transaction.
     private List<EnvelopeHistoryDTO> envelopeHistories;
@@ -92,12 +93,12 @@ public class TransactionDTO {
     }
 
     // Getter method for transactionAmount.
-    public double getTransactionAmount() {
+    public BigDecimal getTransactionAmount() {
         return transactionAmount;
     }
 
     // Setter method for transactionAmount.
-    public void setTransactionAmount(double transactionAmount) {
+    public void setTransactionAmount(BigDecimal transactionAmount) {
         this.transactionAmount = transactionAmount;
     }
 

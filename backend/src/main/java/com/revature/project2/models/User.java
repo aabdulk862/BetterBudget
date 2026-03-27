@@ -2,6 +2,9 @@ package com.revature.project2.models;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -14,19 +17,26 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int userId;
 
+    @NotBlank
     @Column(unique = true, nullable = false)
     private String username;
+    @NotBlank
+    @Size(min = 8)
     @Column(nullable = false)
     private String password;
+    @NotBlank
+    @Email
     @Column(nullable = false)
     private String email;
+    @NotBlank
     @Column(nullable = false)
     private String firstName;
+    @NotBlank
     @Column(nullable = false)
     private String lastName;
     @Column(nullable = false)
     private String role; // default value provided in UserManagemenetService
-    @OneToMany(mappedBy = "user", fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonIgnore
     private List<Envelope> envelopes;
 

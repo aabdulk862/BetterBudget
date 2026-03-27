@@ -1,0 +1,56 @@
+// Shared two-column layout mixin
+// Used by Login, Register, Personalize, and CreateEnvelope pages.
+// Pattern: text on the left, form on the right; form goes full-width on mobile.
+
+@mixin container {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  height: 100vh;
+  padding: 20px;
+  box-sizing: border-box;
+  margin-top: 30px;
+}
+
+@mixin text-pane {
+  width: 45%;
+  padding: 20px;
+  margin-top: 10px;
+
+  h3 {
+    font-weight: bold;
+    color: var(--dark-green);
+  }
+
+  p {
+    line-height: 1.6;
+    font-size: 1.5rem;
+  }
+}
+
+@mixin form-pane {
+  width: 45%;
+  padding: 30px 30px 50px 30px;
+  background-color: var(--light-green);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
+  text-align: center;
+
+  h4 {
+    font-weight: bold;
+    margin-bottom: 20px;
+  }
+}
+
+@mixin responsive($text-selector, $form-selector) {
+  @media (max-width: 768px) {
+    #{$text-selector} {
+      display: none;
+    }
+
+    #{$form-selector} {
+      width: 100%;
+      margin: 0 auto;
+    }
+  }
+}

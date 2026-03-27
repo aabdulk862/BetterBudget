@@ -4,7 +4,8 @@ import com.revature.project2.models.EnvelopeHistory;
 import com.revature.project2.repositories.EnvelopeHistoryRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.http.ResponseEntity;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -18,22 +19,20 @@ public class EnvelopeHistoryService {
         this.envelopeHistoryRepository = envelopeHistoryRepository;
     }
 
-    public ResponseEntity<?> getAllEnvelopeHistory() {
+    public Page<EnvelopeHistory> getAllEnvelopeHistory(Pageable pageable) {
         logger.info("Retrieving all envelope history");
-        List<EnvelopeHistory> envelopeHistories = envelopeHistoryRepository.findAll();
-        return ResponseEntity.ok(envelopeHistories);
+        return envelopeHistoryRepository.findAll(pageable);
     }
 
-    public ResponseEntity<?> getEnvelopeHistoryByEnvelopeId(Integer envelopeId) {
+    public List<EnvelopeHistory> getEnvelopeHistoryByEnvelopeId(Integer envelopeId) {
         logger.info("Retrieving envelope history by id: " + envelopeId);
         List<EnvelopeHistory> envelopeHistory = envelopeHistoryRepository.findByEnvelope_EnvelopeId(envelopeId);
         logger.info("Retrieved envelope history with id: " + envelopeHistory);
-        return ResponseEntity.ok(envelopeHistory);
+        return envelopeHistory;
     }
 
-    public ResponseEntity<?> createEnvelopeHistory(EnvelopeHistory envelopeHistory) {
+    public EnvelopeHistory createEnvelopeHistory(EnvelopeHistory envelopeHistory) {
         logger.info("Creating envelope history: " + envelopeHistory);
-        EnvelopeHistory savedEnvelopeHistory = envelopeHistoryRepository.save(envelopeHistory);
-        return ResponseEntity.ok(savedEnvelopeHistory);
+        return envelopeHistoryRepository.save(envelopeHistory);
     }
 }

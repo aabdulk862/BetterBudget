@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import org.springframework.stereotype.Component;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 @Component
@@ -13,26 +14,26 @@ public class Envelope {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int envelopeId;
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "userId")
     private User user;
     @Column(nullable = false)
     private String envelopeDescription;
-    @Column(nullable = false)
-    private double balance;
-    @Column(nullable = false)
-    private double maxLimit;
-    @OneToMany(mappedBy = "envelope", fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
+    @Column(nullable = false, precision = 19, scale = 2)
+    private BigDecimal balance;
+    @Column(nullable = false, precision = 19, scale = 2)
+    private BigDecimal maxLimit;
+    @OneToMany(mappedBy = "envelope", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonIgnore
     private List<Transaction> transactions;
-    @OneToMany(mappedBy = "envelope", fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "envelope", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonIgnore
     private List<EnvelopeHistory> envelopeHistories;
 
     public Envelope() {
     }
 
-    public Envelope(int envelopeId, User user, String envelopeDescription, double balance, double maxLimit) {
+    public Envelope(int envelopeId, User user, String envelopeDescription, BigDecimal balance, BigDecimal maxLimit) {
         this.envelopeId = envelopeId;
         this.user = user;
         this.envelopeDescription = envelopeDescription;
@@ -70,19 +71,19 @@ public class Envelope {
         this.envelopeDescription = envelopeDescription;
     }
 
-    public double getBalance() {
+    public BigDecimal getBalance() {
         return balance;
     }
 
-    public void setBalance(double balance) {
+    public void setBalance(BigDecimal balance) {
         this.balance = balance;
     }
 
-    public double getMaxLimit() {
+    public BigDecimal getMaxLimit() {
         return maxLimit;
     }
 
-    public void setMaxLimit(double maxLimit) {
+    public void setMaxLimit(BigDecimal maxLimit) {
         this.maxLimit = maxLimit;
     }
 

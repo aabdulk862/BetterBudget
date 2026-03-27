@@ -15,7 +15,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.util.*;
 
-import static java.util.Arrays.asList;
 import static org.mockito.Mockito.*;
 
 public class UserManagementServiceTests {
@@ -85,7 +84,7 @@ public class UserManagementServiceTests {
         doNothing().when(customUDM).createUser(customUserDetailsArgumentCaptor.capture());
 
 
-        Exception ex = Assertions.assertThrows(Exception.class, ()->userManagementService.createUser(user));
+        Assertions.assertThrows(Exception.class, ()->userManagementService.createUser(user));
         verify(customUDM, never()).createUser(Mockito.any(CustomUserDetails.class));
     }
 
@@ -96,7 +95,7 @@ public class UserManagementServiceTests {
         ArgumentCaptor<CustomUserDetails> customUserDetailsArgumentCaptor = ArgumentCaptor.forClass(CustomUserDetails.class);
         doNothing().when(customUDM).createUser(customUserDetailsArgumentCaptor.capture());
 
-        Exception ex = Assertions.assertThrows(Exception.class, ()->userManagementService.createUser(user));
+        Assertions.assertThrows(Exception.class, ()->userManagementService.createUser(user));
         verify(customUDM, never()).createUser(Mockito.any(CustomUserDetails.class));
     }
 
@@ -160,7 +159,7 @@ public class UserManagementServiceTests {
         Map.Entry<String, List<UserRoles>> authObj = new AbstractMap.SimpleEntry<>("notUser", Arrays.asList(UserRoles.ROLE_EMPLOYEE));
         when(authenticationService.getAuthenticatedUser()).thenReturn(Optional.of(authObj));
 
-        Exception ex = Assertions.assertThrows(Exception.class, ()->userManagementService.updateUser(user));
+        Assertions.assertThrows(Exception.class, ()->userManagementService.updateUser(user));
         verify(customUDM, never()).updateUser(Mockito.any(CustomUserDetails.class));
     }
 
@@ -174,7 +173,7 @@ public class UserManagementServiceTests {
         Map.Entry<String, List<UserRoles>> authObj = new AbstractMap.SimpleEntry<>("User", Arrays.asList(UserRoles.ROLE_MANAGER));
         when(authenticationService.getAuthenticatedUser()).thenReturn(Optional.of(authObj));
 
-        Exception ex = Assertions.assertThrows(Exception.class, ()->userManagementService.updateUser(user));
+        Assertions.assertThrows(Exception.class, ()->userManagementService.updateUser(user));
         verify(customUDM, never()).updateUser(Mockito.any(CustomUserDetails.class));
     }
 
@@ -188,7 +187,7 @@ public class UserManagementServiceTests {
         Map.Entry<String, List<UserRoles>> authObj = new AbstractMap.SimpleEntry<>("User", Arrays.asList(UserRoles.ROLE_EMPLOYEE));
         when(authenticationService.getAuthenticatedUser()).thenReturn(Optional.of(authObj));
 
-        Exception ex = Assertions.assertThrows(Exception.class, ()->userManagementService.updateUser(user));
+        Assertions.assertThrows(Exception.class, ()->userManagementService.updateUser(user));
         verify(customUDM, never()).updateUser(Mockito.any(CustomUserDetails.class));
     }
 
@@ -239,7 +238,7 @@ public class UserManagementServiceTests {
         Map.Entry<String, List<UserRoles>> authObj = new AbstractMap.SimpleEntry<>("notUser", Arrays.asList(UserRoles.ROLE_EMPLOYEE));
         when(authenticationService.getAuthenticatedUser()).thenReturn(Optional.of(authObj));
 
-        Exception ex = Assertions.assertThrows(Exception.class, ()->userManagementService.deleteUser(username));
+        Assertions.assertThrows(Exception.class, ()->userManagementService.deleteUser(username));
         verify(customUDM, never()).deleteUser(Mockito.any(String.class));
     }
 

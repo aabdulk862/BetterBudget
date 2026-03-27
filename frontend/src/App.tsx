@@ -12,7 +12,7 @@ import SeeUsers from "./Components/SeeUsers/SeeUsers";
 import useStore from "./stores";
 import { Alert, Snackbar } from "@mui/material";
 import { AllTransactions } from "./Components/Transactions/AllTransactions";
-import axios from "axios";
+import ErrorBoundary from "./Components/ErrorBoundary/ErrorBoundary";
 
 function App() {
   const setUser = useStore((state) => state.setUser);
@@ -25,7 +25,7 @@ function App() {
     if (token) {
       // Parse stored user information (if any)
       const userInfo = JSON.parse(
-        localStorage.getItem("gooderBudgetUser") || "{}"
+        localStorage.getItem("gooderBudgetUser") || "{}",
       );
 
       if (userInfo && userInfo.token) {
@@ -40,31 +40,96 @@ function App() {
   const handleCloseSnackbar = () => {
     setSnackbar(false, "");
   };
-  axios.defaults.baseURL = 'http://44.204.237.144:8080'; 
   return (
     <>
       <BrowserRouter>
         <Navbar />
         <Routes>
-          <Route path="/" element={<Login />} />
-          <Route path="/register" element={<Register />} />
-          <Route path="/personalize" element={<Personalize />} />
-          <Route path="/new_envelope" element={<CreateEnvelope />} />
-          <Route path="/envelopes" element={<EnvelopeList />} />
-          <Route path="/envelope/:id" element={<DetailedEnvelope />} />
-          <Route path="/transactions" element={<AllTransactions />} />
-          <Route path="/add" element={<AddMoney />} />
-          <Route path="/users" element={<SeeUsers />} />
-          <Route path="/transactions" element = {<AllTransactions />} />
+          <Route
+            path="/"
+            element={
+              <ErrorBoundary>
+                <Login />
+              </ErrorBoundary>
+            }
+          />
+          <Route
+            path="/register"
+            element={
+              <ErrorBoundary>
+                <Register />
+              </ErrorBoundary>
+            }
+          />
+          <Route
+            path="/personalize"
+            element={
+              <ErrorBoundary>
+                <Personalize />
+              </ErrorBoundary>
+            }
+          />
+          <Route
+            path="/new_envelope"
+            element={
+              <ErrorBoundary>
+                <CreateEnvelope />
+              </ErrorBoundary>
+            }
+          />
+          <Route
+            path="/envelopes"
+            element={
+              <ErrorBoundary>
+                <EnvelopeList />
+              </ErrorBoundary>
+            }
+          />
+          <Route
+            path="/envelope/:id"
+            element={
+              <ErrorBoundary>
+                <DetailedEnvelope />
+              </ErrorBoundary>
+            }
+          />
+          <Route
+            path="/transactions"
+            element={
+              <ErrorBoundary>
+                <AllTransactions />
+              </ErrorBoundary>
+            }
+          />
+          <Route
+            path="/add"
+            element={
+              <ErrorBoundary>
+                <AddMoney />
+              </ErrorBoundary>
+            }
+          />
+          <Route
+            path="/users"
+            element={
+              <ErrorBoundary>
+                <SeeUsers />
+              </ErrorBoundary>
+            }
+          />
         </Routes>
       </BrowserRouter>
       <Snackbar
         open={snackbar.open}
         autoHideDuration={3000}
         onClose={handleCloseSnackbar}
-        anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
+        anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
       >
-        <Alert onClose={handleCloseSnackbar} severity="success" sx={{ width: '100%' }}>
+        <Alert
+          onClose={handleCloseSnackbar}
+          severity="success"
+          sx={{ width: "100%" }}
+        >
           {snackbar.message}
         </Alert>
       </Snackbar>

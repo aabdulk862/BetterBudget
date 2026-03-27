@@ -1,41 +1,33 @@
-/* Colors */
-:root {
-  --green: #46C377;
-  --dark-green: #23A455; /* For text color */
-  --white: #ffffff;
-}
-
 #appbar {
-  background-color: var(--green); 
+  background-color: var(--green);
 }
 
 .button-container {
   align-items: center;
-  gap: 20px; 
+  gap: 20px;
 }
 
 .oval-button {
   color: var(--dark-green) !important;
-  background-color: var(--white) !important; 
-  border: 2px solid var(--dark-green); 
-  border-radius: 50px !important; 
-  padding: 10px 25px !important; 
-  text-transform: none; 
+  background-color: var(--white) !important;
+  border: 2px solid var(--dark-green);
+  border-radius: 50px !important;
+  padding: 10px 25px !important;
+  text-transform: none;
   margin-left: 10px;
-  box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.2); 
-  transition: all 0.3s ease-in-out; 
+  box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.2);
+  transition: all 0.3s ease-in-out;
 
   &-main {
     @extend .oval-button;
     color: var(--white) !important;
-    background-color: var(--dark-green) !important; 
+    background-color: var(--dark-green) !important;
   }
 }
 
 .oval-button:focus {
-  outline: none; 
+  outline: none;
 }
-
 
 /* Hide Navbar in Mobile View 
 @media (max-width: 768px) {

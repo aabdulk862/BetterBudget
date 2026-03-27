@@ -4,9 +4,6 @@ import com.revature.project2.models.User;
 import com.revature.project2.security.authentication.CustomUDM;
 import com.revature.project2.security.authentication.CustomUserDetails;
 import com.revature.project2.services.UserServices;
-import org.aspectj.lang.annotation.Before;
-import org.checkerframework.checker.units.qual.A;
-import org.checkerframework.checker.units.qual.C;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -69,7 +66,7 @@ public class CustomUDMTests {
 
     @Test
     public void test_createUser_invalid(){
-        IllegalArgumentException ex = Assertions.assertThrows(IllegalArgumentException.class, ()->customUDM.createUser(null));
+        Assertions.assertThrows(IllegalArgumentException.class, ()->customUDM.createUser(null));
         verify(userServices, never()).register(Mockito.any(User.class));
     }
 
@@ -91,7 +88,7 @@ public class CustomUDMTests {
 
     @Test
     public void test_updateUser_invalid(){
-        IllegalArgumentException ex = Assertions.assertThrows(IllegalArgumentException.class, ()->customUDM.updateUser(null));
+        Assertions.assertThrows(IllegalArgumentException.class, ()->customUDM.updateUser(null));
         verify(userServices, never()).update(Mockito.any(User.class));
     }
 
@@ -155,7 +152,7 @@ public class CustomUDMTests {
         when(passwordEncoder.encode("OldPassword")).thenReturn("OldPasswordEncoded");
         when(passwordEncoder.encode("NewPassword")).thenReturn("NewPasswordEncoded");
 
-        BadCredentialsException ex = Assertions.assertThrows(BadCredentialsException.class, ()->customUDM.changePassword("WrongPassword", "NewPassword"));
+        Assertions.assertThrows(BadCredentialsException.class, ()->customUDM.changePassword("WrongPassword", "NewPassword"));
         Mockito.verify(userServices, never()).update(Mockito.any(User.class));
     }
 
@@ -166,7 +163,7 @@ public class CustomUDMTests {
         when(securityContext.getAuthentication()).thenReturn(null);
         SecurityContextHolder.setContext(securityContext);
 
-        UsernameNotFoundException ex = Assertions.assertThrows(UsernameNotFoundException.class, ()->customUDM.changePassword("OldPassword", "NewPassword"));
+        Assertions.assertThrows(UsernameNotFoundException.class, ()->customUDM.changePassword("OldPassword", "NewPassword"));
         Mockito.verify(userServices, never()).update(Mockito.any(User.class));
     }
 

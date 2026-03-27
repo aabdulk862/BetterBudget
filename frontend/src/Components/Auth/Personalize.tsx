@@ -1,5 +1,15 @@
 import React, { useState } from "react";
-import { Box, Typography, TextField, Button, Divider, FormControlLabel, Switch, Snackbar, Alert } from "@mui/material";
+import {
+  Box,
+  Typography,
+  TextField,
+  Button,
+  Divider,
+  FormControlLabel,
+  Switch,
+  Snackbar,
+  Alert,
+} from "@mui/material";
 import { Link, useLocation, useNavigate } from "react-router-dom"; // To access passed props
 import "./Personalize.scss";
 import axios from "axios";
@@ -31,11 +41,9 @@ export const Personalize: React.FC = () => {
 
   const registerUser = async (data: UserData) => {
     try {
-      const response = await axios.post(
-        `${backendHost}/users/register`,
-        data,
-        { withCredentials: true },
-      ); // Replace with your API endpoint
+      const response = await axios.post(`${backendHost}/users/register`, data, {
+        withCredentials: true,
+      }); // Replace with your API endpoint
       console.log("User registered successfully:", response.data);
       // Redirect or show success message here
       // alert("Registration successful!");
@@ -52,7 +60,11 @@ export const Personalize: React.FC = () => {
     e.preventDefault();
 
     // Validate the data
-    if (userData.firstName === "" || userData.lastName === "" || userData.email === "") {
+    if (
+      userData.firstName === "" ||
+      userData.lastName === "" ||
+      userData.email === ""
+    ) {
       setErrorAlert({ open: true, message: "Please fill out all fields!" });
       return;
     }
@@ -75,9 +87,11 @@ export const Personalize: React.FC = () => {
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.name === "manager") {
       setManager(e.target.checked);
-      setUserData((prev: UserData) => ({ ...prev, role: e.target.checked ? "ROLE_MANAGER" : "ROLE_EMPLOYEE" }));
-    }
-    else{
+      setUserData((prev: UserData) => ({
+        ...prev,
+        role: e.target.checked ? "ROLE_MANAGER" : "ROLE_EMPLOYEE",
+      }));
+    } else {
       const { name, value } = e.target;
       setUserData((prev: UserData) => ({ ...prev, [name]: value }));
     }
@@ -140,15 +154,20 @@ export const Personalize: React.FC = () => {
             value={userData.email}
             onChange={handleChange}
           />
-          
-          <FormControlLabel sx={{marginTop: 2, display: "block"}}
-          control={
-            <Switch checked={manager} onChange={handleChange} name="manager" />
-          }
-          label="Make Manager"
-        />
+
+          <FormControlLabel
+            sx={{ marginTop: 2, display: "block" }}
+            control={
+              <Switch
+                checked={manager}
+                onChange={handleChange}
+                name="manager"
+              />
+            }
+            label="Make Manager"
+          />
           <Button
-            className="button3"
+            className="btn-primary"
             type="submit"
             fullWidth
             variant="contained"
@@ -167,18 +186,22 @@ export const Personalize: React.FC = () => {
           </Typography>
         </Box>
       </Box>
-          
-                {/* Error Snackbar */}
-                      <Snackbar
-                              open={errorAlert.open}
-                              autoHideDuration={3000}
-                              onClose={()=>setErrorAlert({open: false, message: ""})}
-                              anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
-                            >
-                              <Alert onClose={()=>setErrorAlert({open:false,message:""})} severity="error" sx={{ width: '100%' }}>
-                                {errorAlert.message}
-                              </Alert>
-                      </Snackbar>
+
+      {/* Error Snackbar */}
+      <Snackbar
+        open={errorAlert.open}
+        autoHideDuration={3000}
+        onClose={() => setErrorAlert({ open: false, message: "" })}
+        anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
+      >
+        <Alert
+          onClose={() => setErrorAlert({ open: false, message: "" })}
+          severity="error"
+          sx={{ width: "100%" }}
+        >
+          {errorAlert.message}
+        </Alert>
+      </Snackbar>
     </Box>
   );
 };

@@ -1,10 +1,15 @@
 package com.revature.project2.controllers;
 
+import com.revature.project2.models.DTOs.PaginatedResponse;
 import com.revature.project2.models.DTOs.TransactionDTO;
 import com.revature.project2.models.Transaction;
 import com.revature.project2.services.TransactionService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -38,7 +43,7 @@ public class TransactionController {
     }
 
     @PostMapping("/transactions")
-    public ResponseEntity<?> createTransaction(@RequestBody Transaction transaction) {
+    public ResponseEntity<?> createTransaction(@Valid @RequestBody Transaction transaction) {
         try {
             return ResponseEntity.ok(transactionService.createTransaction(transaction));
         } catch (Exception e) {
@@ -48,8 +53,11 @@ public class TransactionController {
 
     //TODO: Spring Security
     @GetMapping("/transactions")
-    public ResponseEntity<List<Transaction>> getTransactions() {
-        return ResponseEntity.ok(transactionService.getAllTransactions());
+    public ResponseEntity<PaginatedResponse<Transaction>> getTransactions(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "20") int size) {
+        Page<Transaction> transactions = transactionService.getAllTransactions(PageRequest.of(page, size));
+        return ResponseEntity.ok(PaginatedResponse.from(transactions));
     }
 
     @PatchMapping("/transactions/category/{id}")
@@ -60,8 +68,9 @@ public class TransactionController {
     }
 
     @GetMapping("/transactions/envelope/{envelopeId}")
-    public ResponseEntity<?> getTransactionsByEnvelopeId(@PathVariable Integer envelopeId) {
-        return ResponseEntity.ok(transactionService.getTransactionsByEnvelopeId(envelopeId));
+    public ResponseEntity<List<Transaction>> getTransactionsByEnvelopeId(@PathVariable Integer envelopeId, Authentication authentication) {
+        List<Transaction> transactions = transactionService.getTransactionsByEnvelopeId(envelopeId, authentication.getName());
+        return ResponseEntity.ok(transactions);
     }
 
 

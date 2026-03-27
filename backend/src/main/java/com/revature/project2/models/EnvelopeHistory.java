@@ -3,6 +3,8 @@ package com.revature.project2.models;
 import jakarta.persistence.*;
 import org.springframework.stereotype.Component;
 
+import java.math.BigDecimal;
+
 @Component
 @Entity
 @Table(name = "envelopeHistories")
@@ -10,19 +12,19 @@ public class EnvelopeHistory {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int amountHistoryId;
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "envelopeId")
     private Envelope envelope;
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "transactionId")
     private Transaction transaction;
-    @Column(nullable = false)
-    private double envelopeAmount;
+    @Column(nullable = false, precision = 19, scale = 2)
+    private BigDecimal envelopeAmount;
 
     public EnvelopeHistory() {
     }
 
-    public EnvelopeHistory(int amountHistoryId, Envelope envelope, Transaction transaction, double envelopeAmount) {
+    public EnvelopeHistory(int amountHistoryId, Envelope envelope, Transaction transaction, BigDecimal envelopeAmount) {
         this.amountHistoryId = amountHistoryId;
         this.envelope = envelope;
         this.transaction = transaction;
@@ -53,11 +55,11 @@ public class EnvelopeHistory {
         this.transaction = transaction;
     }
 
-    public double getEnvelopeAmount() {
+    public BigDecimal getEnvelopeAmount() {
         return envelopeAmount;
     }
 
-    public void setEnvelopeAmount(double envelopeAmount) {
+    public void setEnvelopeAmount(BigDecimal envelopeAmount) {
         this.envelopeAmount = envelopeAmount;
     }
 

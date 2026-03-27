@@ -1,6 +1,8 @@
 package com.revature.project2.models.DTOs;
 
 
+import java.math.BigDecimal;
+
 // Data Transfer Object (DTO) for representing the envelope history.
 public class EnvelopeHistoryDTO {
 
@@ -14,7 +16,7 @@ public class EnvelopeHistoryDTO {
     private TransactionDTO transactionDTO;
 
     // Amount of money in the envelope for this history entry.
-    private double envelopeAmount;
+    private BigDecimal envelopeAmount;
 
     // Getter method for amountHistoryId.
     public int getAmountHistoryId() {
@@ -47,12 +49,12 @@ public class EnvelopeHistoryDTO {
     }
 
     // Getter method for envelopeAmount.
-    public double getEnvelopeAmount() {
+    public BigDecimal getEnvelopeAmount() {
         return envelopeAmount;
     }
 
     // Setter method for envelopeAmount.
-    public void setEnvelopeAmount(double envelopeAmount) {
+    public void setEnvelopeAmount(BigDecimal envelopeAmount) {
         this.envelopeAmount = envelopeAmount;
     }
 }

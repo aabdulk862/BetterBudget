@@ -3,9 +3,9 @@ package com.revature.project2.security;
 import com.revature.project2.security.authentication.JWTAuthFilter;
 import com.revature.project2.security.authentication.JWTAuthProvider;
 import com.revature.project2.security.exceptionhandlers.AccessDeniedHandlerImpl;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Lazy;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.Customizer;
@@ -29,8 +29,11 @@ public class SecurityConfig {
     private final JWTAuthProvider jwtAuthProvider;
     private final AccessDeniedHandler accessDeniedHandler;
 
-    // using @Lazy injection to avoid circular dependency
-    public SecurityConfig(@Lazy JWTAuthFilter jwtAuthFilter, AuthenticationEntryPoint authenticationEntryPoint, JWTAuthProvider jwtAuthProvider, AccessDeniedHandlerImpl accessDeniedHandler) {
+    @Value("${cors.allowed-origins}")
+    private String[] allowedOrigins;
+
+    // circular dependency resolved via ObjectProvider in JWTAuthFilter
+    public SecurityConfig(JWTAuthFilter jwtAuthFilter, AuthenticationEntryPoint authenticationEntryPoint, JWTAuthProvider jwtAuthProvider, AccessDeniedHandlerImpl accessDeniedHandler) {
         this.jwtAuthFilter = jwtAuthFilter;
         this.authenticationEntryPoint = authenticationEntryPoint;
         this.jwtAuthProvider = jwtAuthProvider;
@@ -49,6 +52,9 @@ public class SecurityConfig {
                 .authorizeHttpRequests(config -> {
                     // Allow unauthenticated access to the /users endpoint
                     config.requestMatchers(HttpMethod.POST, "/users","/users/register").permitAll();
+
+                    // Permit unauthenticated access to OpenAPI and Swagger UI
+                    config.requestMatchers("/api-docs/**", "/v3/api-docs/**", "/swagger-ui/**", "/swagger-ui.html").permitAll();
 
                     // All other requests must be authenticated
                     config.anyRequest().authenticated();
@@ -79,7 +85,7 @@ public class SecurityConfig {
                 registry
                         .addMapping("/**")
                         .allowedMethods("GET", "POST", "PUT", "PATCH", "DELETE")
-                        .allowedOriginPatterns("*")
+                        .allowedOrigins(allowedOrigins)
                         .allowCredentials(true)
                         .allowedHeaders("*");
             }

@@ -1,17 +1,17 @@
 @use "../../two-column-layout" as layout;
 
 /* Main Container */
-.personalize-container {
+.env-container {
   @include layout.container;
 }
 
 /* Left Side: Text */
-.personalize-text {
+.env-text {
   @include layout.text-pane;
 }
 
 /* Right Side: Form */
-.personalize-form {
+.env-form {
   @include layout.form-pane;
 }
 
@@ -31,14 +31,14 @@
   padding: 10px 20px !important;
 }
 
-.login-link {
+.signup-link {
   text-decoration: none;
   color: var(--purple);
   font-weight: bold;
   margin-left: 5px;
 }
 
-.login-link:hover {
+.signup-link:hover {
   text-decoration: underline;
 }
 
@@ -47,17 +47,5 @@
   font-weight: bold;
 }
 
-.go-back-link {
-  text-decoration: none;
-  color: var(--blue);
-  font-weight: bold;
-  cursor: pointer;
-  padding: 10px;
-}
-
-.go-back-link:hover {
-  text-decoration: underline;
-}
-
 /* Hide left pane in mobile view */
-@include layout.responsive(".personalize-text", ".personalize-form");
+@include layout.responsive(".env-text", ".env-form");

@@ -2,12 +2,19 @@ package com.revature.project2.services;
 
 import com.revature.project2.exceptions.BusinessException;
 import com.revature.project2.models.DTOs.TransactionDTO;
+import com.revature.project2.models.Envelope;
 import com.revature.project2.models.Transaction;
 import com.revature.project2.models.mappers.TransactionDTOMapper;
+import com.revature.project2.repositories.EnvelopeRepository;
 import com.revature.project2.repositories.TransactionRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.AccessDeniedException;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -15,19 +22,32 @@ import java.util.List;
 @Service
 public class TransactionService {
     private final TransactionRepository transactionRepository;
+    private final EnvelopeRepository envelopeRepository;
     private final Logger logger = LoggerFactory.getLogger(TransactionService.class);
 
     private final TransactionDTOMapper transactionDTOMapper;
 
-    public TransactionService(TransactionRepository transactionRepository, TransactionDTOMapper transactionDTOMapper) {
+    public TransactionService(TransactionRepository transactionRepository, EnvelopeRepository envelopeRepository, TransactionDTOMapper transactionDTOMapper) {
         this.transactionRepository = transactionRepository;
+        this.envelopeRepository = envelopeRepository;
         this.transactionDTOMapper = transactionDTOMapper;
+    }
+
+    private void verifyOwnership(Envelope envelope, String authenticatedUsername) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication != null &&
+                authentication.getAuthorities().contains(new SimpleGrantedAuthority("ROLE_MANAGER"))) {
+            return;
+        }
+        if (!envelope.getUser().getUsername().equals(authenticatedUsername)) {
+            throw new AccessDeniedException("Access denied");
+        }
     }
 
     public Transaction updateTransactionTitle(Integer id, String newTitle) {
         logger.info("Updating transaction title for transaction with id: " + id);
         Transaction transaction = transactionRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Transaction not found"));
+                .orElseThrow(() -> new BusinessException(2001, "Transaction not found"));
         transaction.setTitle(newTitle);
         return transactionRepository.save(transaction);
     }
@@ -35,7 +55,7 @@ public class TransactionService {
     public Transaction updateTransactionDescription(Integer id, String newDescription) {
         logger.info("Updating transaction description for transaction with id: " + id);
         Transaction transaction = transactionRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Transaction not found"));
+                .orElseThrow(() -> new BusinessException(2001, "Transaction not found"));
         transaction.setTransactionDescription(newDescription);
         return transactionRepository.save(transaction);
     }
@@ -53,13 +73,13 @@ public class TransactionService {
         try {
             return transactionRepository.save(transaction);
         } catch (Exception e) {
-            throw new RuntimeException("Failed to save transaction: " + e.getMessage(), e);
+            throw new BusinessException(2002, "Failed to save transaction: " + e.getMessage());
         }
     }
 
-    public List<Transaction> getAllTransactions() {
+    public Page<Transaction> getAllTransactions(Pageable pageable) {
         logger.info("Retrieving all transactions");
-        return transactionRepository.findAll();
+        return transactionRepository.findAll(pageable);
     }
 
     public Transaction updateTransactionCategory(Integer id, String newCategory) {
@@ -73,14 +93,12 @@ public class TransactionService {
         return transactionRepository.save(transaction);
     }
 
-    public ResponseEntity<?> getTransactionsByEnvelopeId(Integer envelopeId) {
+    public List<Transaction> getTransactionsByEnvelopeId(Integer envelopeId, String authenticatedUsername) {
         logger.info("Retrieving transaction by envelope id: " + envelopeId);
-        List<Transaction> transactions = transactionRepository.findByEnvelope_EnvelopeId(envelopeId);
-        if (transactions.isEmpty()) {
-            return ResponseEntity.badRequest().body("Transaction with Envelope id " + envelopeId + " does not exist");
-        } else {
-            return ResponseEntity.ok(transactions);
-        }
+        Envelope envelope = envelopeRepository.findById(envelopeId)
+                .orElseThrow(() -> new BusinessException(1001, "Envelope not found"));
+        verifyOwnership(envelope, authenticatedUsername);
+        return transactionRepository.findByEnvelope_EnvelopeId(envelopeId);
     }
 
 }

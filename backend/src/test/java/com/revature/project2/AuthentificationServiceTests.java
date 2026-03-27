@@ -24,7 +24,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
-import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 
@@ -82,7 +81,7 @@ public class AuthentificationServiceTests {
         UserDetails userDetails = new CustomUserDetails(user, passwordEncoder);
         when(customUDM.loadUserByUsername("User")).thenReturn(userDetails);
 
-        UsernameNotFoundException ex = Assertions.assertThrows(UsernameNotFoundException.class, ()->authenticationService.login("User", "notpassword"));
+        Assertions.assertThrows(UsernameNotFoundException.class, ()->authenticationService.login("User", "notpassword"));
     }
 
     @Test
